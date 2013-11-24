@@ -1,10 +1,10 @@
 #!/bin/bash
-# Usage: replace PATTERN OUT IN [SIMULATE]
+# Usage: replace PATTERN OUT IN [replace]
 
 
 
 # Check if arguments are provided
-if [ -z "$1" ] && [ -z "$2" ] && [ -z "$3" ]
+if [ -z "$1" -o -z "$2" -o -z "$3" ]
 then
     echo "Please provide arguments."
     exit 1
@@ -24,7 +24,7 @@ IFS="$(printf '\n\t')"
 
 # Log
 printf "\n%s\n============================\n" "$(date)" 1>&2
-if [ ! -z "$4" ]
+if [ -z "$4" ]
 then
     printf "=   S I M U L A T I O N    =\n============================\n" 1>&2
 fi
@@ -40,7 +40,7 @@ do
     printf "%s > %s\n" \
         "$(grep -o -n -e "$out" "$file")" \
         "$(grep -o -e "$out" "$file" | sed -e "s/$out/$in/")" 1>&2
-    if [ -z "$4" ]
+    if [ ! -z "$4" ]
     then
         sed -i -e "s/$out/$in/" "$file"
     fi
