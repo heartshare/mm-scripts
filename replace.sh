@@ -36,10 +36,13 @@ printf "# Match files with \"%s\" pattern and replace \"%s\" with \"%s\" string 
 # Do the work
 for file in $(find . -iname "$pattern" -exec basename {} \;);
 do
+    # Log
     printf "# %s\n" "$file" 1>&2
     printf "%s > %s\n" \
         "$(grep -o -n -e "$out" "$file")" \
         "$(grep -o -e "$out" "$file" | sed -e "s/$out/$in/")" 1>&2
+
+    # Replace
     if [ ! -z "$4" ]
     then
         sed -i -e "s/$out/$in/" "$file"
