@@ -1,5 +1,5 @@
 #!/bin/bash
-# Usage: replace PATTERN OUT IN [replace]
+# Usage: replace FIND-PATTERN GREP-PATTERN OUT IN [replace]
 
 
 
@@ -10,9 +10,16 @@ then
     exit 1
 else
     # Initialize main parameters 
-    pattern="$1"
-    out="$2"
-    in="$3"
+    findpattern="$1"
+    greppattern="$2"
+    out="$3"
+    in="$4"
+    if [ -z "$5" ]
+    then
+        simulation="Yes"
+    else
+        simulation="No"
+    fi
 fi
 
 
@@ -24,28 +31,44 @@ IFS="$(printf '\n\t')"
 
 # Log
 printf "\n%s\n============================\n" "$(date)" 1>&2
-if [ -z "$4" ]
+if [ "$simulation" == "Yes" ]
 then
     printf "=   S I M U L A T I O N    =\n============================\n" 1>&2
 fi
-printf "# Match files with \"%s\" pattern and replace \"%s\" with \"%s\" string inside files.\n" \
-    "$pattern" "$out" "$in" 1>&2
+printf "# Match files with \"%s\" findpattern and replace \"%s\" with \"%s\" string inside files.\n" \
+    "$findpattern" "$out" "$in" 1>&2
 
 
 
 # Do the work
-for file in $(find . -iname "$pattern" -exec basename {} \;);
+for file in $(find . -iname "$findpattern" -exec basename {} \;);
 do
-    # Log
-    printf "# %s\n" "$file" 1>&2
-    printf "%s > %s\n" \
-        "$(grep -o -n -e "$out" "$file")" \
-        "$(grep -o -e "$out" "$file" | sed -e "s/$out/$in/")" 1>&2
-
-    # Replace
-    if [ ! -z "$4" ]
+    if [ "$greppattern" == "false" ]
     then
-        sed -i -e "s/$out/$in/" "$file"
+        # Log
+        printf "%s > %s # %s\n" \
+            "$(grep -o -n -e "$out" "$file")" \
+            "$(grep -o -e "$out" "$file" | sed -e "s/$out/$in/")" \
+            "$file" 1>&2
+
+        # Replace
+        if [ "$simulation" == "No" ]
+        then
+            sed -i -e "s/$out/$in/" "$file"
+        fi
+    elif grep -q -s -i -e "$greppattern" "$file"
+    then
+        # Log
+        printf "%s > %s # %s\n" \
+            "$(grep -o -n -e "$out" "$file")" \
+            "$(grep -o -e "$out" "$file" | sed -e "s/$out/$in/")" \
+            "$file" 1>&2
+
+        # Replace
+        if [ "$simulation" == "No" ]
+        then
+            sed -i -e "s/$out/$in/" "$file"
+        fi
     fi
 done
 

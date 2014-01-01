@@ -1,2 +1,0 @@
-wmctrl -c Firefox
-shutdown -h 1 &
