@@ -8,9 +8,9 @@ IFS="$(printf '\n\t')"
 src="/home/mama/"
 dest="/media/DATAMM01/mama-lap-backup/"
 include="/home/mama/.rsync-backup-folder-list-include.txt"
-exclude="/tmp/rsync-backup-folder-list-exclude.txt"
-log="/tmp/rsync-backup.log"
-options="-avh"
+exclude="/home/mama/.tmp/log/rsync-backup-folder-list-exclude.txt"
+log="/home/mama/.tmp/log/rsync-backup.log"
+options="-avh --exclude='*.part'"
 
 # Aplication
 if [ -d "$src" -a -d "$dest" -a -f "$include" ]
