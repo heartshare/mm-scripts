@@ -10,7 +10,7 @@ dest="/media/DATAMM01/mama-lap-backup/"
 include="/home/mama/.rsync-backup-folder-list-include.txt"
 exclude="/home/mama/.tmp/log/rsync-backup-folder-list-exclude.txt"
 log="/home/mama/.tmp/log/rsync-backup.log"
-options="-avh --exclude='*.part'"
+options="-avh"
 
 # Aplication
 if [ -d "$src" -a -d "$dest" -a -f "$include" ]
