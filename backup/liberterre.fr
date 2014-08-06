@@ -1,0 +1,20 @@
+#!/bin/bash
+# Usage: backup-liberterre-fr-original
+
+dir="$HOME""/backup/web/original"
+useragent="Mozilla/5.0 (compatible; Wget; https://github.com/metahistory)"
+log="$HOME""/backup/web/logs/www.liberterre.fr-original.log"
+url="http://www.liberterre.fr/"
+
+cd "$dir"
+
+wget \
+    --user-agent="$useragent" \
+    --output-file="$log" \
+    --convert-links --backup-converted \
+    --recursive --level=inf \
+    --limit-rate=333k \
+    --page-requisites \
+    --timestamping \
+    --background \
+    "$url"

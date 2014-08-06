@@ -1,5 +1,5 @@
 #!/bin/bash
-# Usage: ytmusic URL tag [EXTRA]
+# Usage: ytvideo tag [OPTIONS] URL
 
 
 # Check if arguments are provided
@@ -9,8 +9,8 @@ then
     exit 1
 else
     # Initialize main parameters 
-    url="$1"
-    root="$HOME""/Videos/youtube/""$2"
+    root="$HOME""/Videos/youtube/""$1"
+    shift
     archive="$HOME""/Videos/youtube/.archive"
     if [ ! -d "$root" ]
     then
@@ -24,9 +24,6 @@ fi
 IFS="$(printf '\n\t')"
 
 
-# Limit bandwith
-sudo wondershaper eth0 1500 100
-
 # Main script wrapper
 youtube-dl \
     --output "$root""/%(title)s---%(id)s.%(ext)s" \
@@ -34,10 +31,7 @@ youtube-dl \
     --restrict-filenames \
     --write-description \
     --ignore-errors \
-    $3 "$url"
-
-# Unlimit bandwith
-sudo wondershaper clear eth0
+    "$@"
 
 # Move description
 mv $root/*.description /home/mama/Videos/youtube/descriptions/.
